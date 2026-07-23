@@ -1,4 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+
 import {
   Pressable,
   StyleSheet,
@@ -55,7 +57,10 @@ export default function AddScreen() {
           </View>
         </Pressable>
 
-        <Pressable style={styles.secondaryButton}>
+        <Pressable
+          style={styles.secondaryButton}
+          onPress={() => router.push('/manual-entry')}
+        >
           <Ionicons
             name="create-outline"
             size={26}

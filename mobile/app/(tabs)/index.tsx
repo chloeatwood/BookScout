@@ -1,133 +1,79 @@
 import { Ionicons } from '@expo/vector-icons';
 import {
-  Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
 
+import { BookCard } from '@/components/BookCard';
+import { SectionHeader } from '@/components/SectionHeader';
 import { colors } from '@/constants/Colors';
-import { homeStyles as styles } from '@/constants/HomeStyles';
-
-const currentlyReading = [
-  {
-    id: '1',
-    title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
-    progress: 65,
-  },
-  {
-    id: '2',
-    title: 'The Name of the Wind',
-    author: 'Patrick Rothfuss',
-    progress: 32,
-  },
-  {
-    id: '3',
-    title: 'Dune',
-    author: 'Frank Herbert',
-    progress: 12,
-  },
-];
-
-const recentFinds = [
-  {
-    id: '1',
-    title: 'Dune',
-    author: 'Frank Herbert',
-    price: '$9.99',
-    store: 'Bookstore',
-  },
-  {
-    id: '2',
-    title: 'The Martian',
-    author: 'Andy Weir',
-    price: '$7.49',
-    store: 'Bookshop',
-  },
-  {
-    id: '3',
-    title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
-    price: '$8.99',
-    store: 'Books Online',
-  },
-];
-
-const wishlist = [
-  {
-    id: '1',
-    title: 'Project Hail Mary',
-    author: 'Andy Weir',
-    price: '$14.99',
-  },
-  {
-    id: '2',
-    title: 'Mistborn',
-    author: 'Brandon Sanderson',
-    price: '$10.49',
-  },
-  {
-    id: '3',
-    title: 'The Midnight Library',
-    author: 'Matt Haig',
-    price: '$11.99',
-  },
-];
-
+import { useBooks } from '@/context/BookContext';
 
 export default function HomeScreen() {
+  const { getBooksByList } = useBooks();
+
+  const currentlyReading =
+    getBooksByList('currentlyReading');
+
+  const wishlist =
+    getBooksByList('wishlist');
+
+  const finished =
+    getBooksByList('finished');
+
+  const bookshelf =
+    getBooksByList('bookshelf');
+
+  const recommendations =
+    getBooksByList('recommendations');
+
   return (
     <View style={styles.container}>
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
       >
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Welcome back!</Text>
-            <Text style={styles.title}>BookScout</Text>
+            <Text style={styles.greeting}>
+              Welcome back!
+            </Text>
+
+            <Text style={styles.title}>
+              Your BookScout
+            </Text>
           </View>
 
-          <View style={styles.profilePlaceholder}>
-            <Ionicons
-              name="person-outline"
-              size={22}
-              color={colors.forest}
-            />
-          </View>
+          <Ionicons
+            name="leaf-outline"
+            size={38}
+            color={colors.forest}
+          />
         </View>
 
-        {/* Search Bar */}
+        {/* Search */}
         <View style={styles.searchContainer}>
           <Ionicons
             name="search-outline"
-            size={22}
+            size={21}
             color={colors.gray}
           />
 
           <TextInput
-            style={styles.searchInput}
-            placeholder="Search for a book..."
+            placeholder="Search your books..."
             placeholderTextColor={colors.gray}
+            style={styles.searchInput}
           />
-
-          <Pressable style={styles.scanButton}>
-            <Ionicons
-              name="barcode-outline"
-              size={22}
-              color={colors.forest}
-            />
-          </Pressable>
         </View>
 
         {/* Currently Reading */}
         <SectionHeader
           title="Currently Reading"
-          action="View All"
+          list="currentlyReading"
         />
 
         <ScrollView
@@ -136,185 +82,143 @@ export default function HomeScreen() {
           contentContainerStyle={styles.horizontalList}
         >
           {currentlyReading.map((book) => (
-            <Pressable
+            <BookCard
               key={book.id}
-              style={styles.readingCard}
-            >
-              <View style={styles.bookCover}>
-                <Ionicons
-                  name="book-outline"
-                  size={38}
-                  color={colors.cream}
-                />
-              </View>
-
-              <Text
-                style={styles.bookTitle}
-                numberOfLines={2}
-              >
-                {book.title}
-              </Text>
-
-              <Text
-                style={styles.author}
-                numberOfLines={1}
-              >
-                {book.author}
-              </Text>
-
-              <View style={styles.progressBackground}>
-                <View
-                  style={[
-                    styles.progressBar,
-                    { width: `${book.progress}%` },
-                  ]}
-                />
-              </View>
-
-              <Text style={styles.progressText}>
-                {book.progress}% complete
-              </Text>
-            </Pressable>
+              book={book}
+            />
           ))}
         </ScrollView>
 
-        {/* Recent Finds */}
-        <SectionHeader
-          title="Recent Finds"
-          action="See More"
-        />
-
-        <View style={styles.listContainer}>
-          {recentFinds.map((book) => (
-            <Pressable
-              key={book.id}
-              style={styles.listCard}
-            >
-              <View style={styles.smallBookCover}>
-                <Ionicons
-                  name="book-outline"
-                  size={26}
-                  color={colors.cream}
-                />
-              </View>
-
-              <View style={styles.listInfo}>
-                <Text
-                  style={styles.listTitle}
-                  numberOfLines={1}
-                >
-                  {book.title}
-                </Text>
-
-                <Text
-                  style={styles.author}
-                  numberOfLines={1}
-                >
-                  {book.author}
-                </Text>
-
-                <Text style={styles.store}>
-                  Best price at {book.store}
-                </Text>
-              </View>
-
-              <View style={styles.priceContainer}>
-                <Text style={styles.price}>
-                  {book.price}
-                </Text>
-
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={colors.gray}
-                />
-              </View>
-            </Pressable>
-          ))}
-        </View>
-
         {/* Wishlist */}
         <SectionHeader
-          title="Your Wishlist"
-          action="View All"
+          title="Wishlist"
+          list="wishlist"
         />
 
-        <View style={styles.listContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        >
           {wishlist.map((book) => (
-            <Pressable
+            <BookCard
               key={book.id}
-              style={styles.listCard}
-            >
-              <View
-                style={[
-                  styles.smallBookCover,
-                  styles.wishlistCover,
-                ]}
-              >
-                <Ionicons
-                  name="heart-outline"
-                  size={26}
-                  color={colors.forest}
-                />
-              </View>
-
-              <View style={styles.listInfo}>
-                <Text
-                  style={styles.listTitle}
-                  numberOfLines={1}
-                >
-                  {book.title}
-                </Text>
-
-                <Text
-                  style={styles.author}
-                  numberOfLines={1}
-                >
-                  {book.author}
-                </Text>
-
-                <Text style={styles.store}>
-                  Current lowest price
-                </Text>
-              </View>
-
-              <View style={styles.priceContainer}>
-                <Text style={styles.price}>
-                  {book.price}
-                </Text>
-
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={colors.gray}
-                />
-              </View>
-            </Pressable>
+              book={book}
+            />
           ))}
-        </View>
+        </ScrollView>
+
+        {/* Finished */}
+        <SectionHeader
+          title="Finished"
+          list="finished"
+        />
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        >
+          {finished.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Bookshelf */}
+        <SectionHeader
+          title="Bookshelf"
+          list="bookshelf"
+        />
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        >
+          {bookshelf.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Recommendations */}
+        <SectionHeader
+          title="Recommendations"
+          list="recommendations"
+        />
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        >
+          {recommendations.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+            />
+          ))}
+        </ScrollView>
       </ScrollView>
     </View>
   );
 }
 
-function SectionHeader({
-  title,
-  action,
-}: {
-  title: string;
-  action: string;
-}) {
-  return (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>
-        {title}
-      </Text>
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.cream,
+  },
 
-      <Pressable>
-        <Text style={styles.sectionAction}>
-          {action}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
+  content: {
+    padding: 20,
+    paddingTop: 55,
+    paddingBottom: 40,
+  },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  greeting: {
+    fontSize: 14,
+    color: colors.gray,
+  },
+
+  title: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: colors.forest,
+    marginTop: 3,
+  },
+
+  searchContainer: {
+    height: 52,
+    backgroundColor: colors.white,
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 22,
+    borderWidth: 1,
+    borderColor: colors.lightGray,
+  },
+
+  searchInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 14,
+    color: colors.dark,
+  },
+
+  horizontalList: {
+    paddingBottom: 4,
+  },
+});

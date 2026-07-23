@@ -1,21 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 import { colors } from '@/constants/Colors';
+import { Book } from '@/types/book';
 
 type BookCardProps = {
-  title: string;
-  author: string;
-  progress?: number;
-  onPress?: () => void;
+  book: Book;
 };
 
-export function BookCard({
-  title,
-  author,
-  progress,
-  onPress,
-}: BookCardProps) {
+export function BookCard({ book }: BookCardProps) {
   return (
     <Pressable
       style={{
@@ -25,14 +19,22 @@ export function BookCard({
         padding: 12,
         borderWidth: 1,
         borderColor: colors.lightGray,
+        marginRight: 12,
       }}
-      onPress={onPress}
-    >
+      onPress={() =>
+        router.push({
+          pathname: '/book/[id]',
+          params: {
+            id: book.id,
+          },
+        })
+      }    
+      >
       <View
         style={{
           height: 150,
           borderRadius: 10,
-          backgroundColor: colors.forest,
+          backgroundColor: book.coverColor ?? colors.forest,
           alignItems: 'center',
           justifyContent: 'center',
           marginBottom: 10,
@@ -55,7 +57,7 @@ export function BookCard({
         }}
         numberOfLines={2}
       >
-        {title}
+        {book.title}
       </Text>
 
       <Text
@@ -66,10 +68,10 @@ export function BookCard({
         }}
         numberOfLines={1}
       >
-        {author}
+        {book.author}
       </Text>
 
-      {progress !== undefined && (
+      {book.progress !== undefined && (
         <>
           <View
             style={{
@@ -83,7 +85,7 @@ export function BookCard({
             <View
               style={{
                 height: '100%',
-                width: `${progress}%`,
+                width: `${book.progress}%`,
                 backgroundColor: colors.sage,
                 borderRadius: 5,
               }}
@@ -97,7 +99,7 @@ export function BookCard({
               marginTop: 5,
             }}
           >
-            {progress}% complete
+            {book.progress}% complete
           </Text>
         </>
       )}

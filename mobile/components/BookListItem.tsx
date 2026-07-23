@@ -1,28 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 import { colors } from '@/constants/Colors';
+import { Book } from '@/types/book';
 
 type BookListItemProps = {
-  title: string;
-  author: string;
-  price?: string;
+  book: Book;
   subtitle?: string;
-  icon?: keyof typeof Ionicons.glyphMap;
-  onPress?: () => void;
 };
 
 export function BookListItem({
-  title,
-  author,
-  price,
+  book,
   subtitle,
-  icon = 'book-outline',
-  onPress,
 }: BookListItemProps) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() =>
+        router.push({
+          pathname: '/book/[id]',
+          params: {
+            id: book.id,
+          },
+        })
+      }
       style={{
         minHeight: 82,
         backgroundColor: colors.white,
@@ -32,6 +33,7 @@ export function BookListItem({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: colors.lightGray,
+        marginBottom: 8,
       }}
     >
       <View
@@ -39,13 +41,14 @@ export function BookListItem({
           width: 58,
           height: 62,
           borderRadius: 9,
-          backgroundColor: colors.forest,
+          backgroundColor:
+            book.coverColor ?? colors.forest,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
         <Ionicons
-          name={icon}
+          name="book-outline"
           size={26}
           color={colors.cream}
         />
@@ -66,7 +69,7 @@ export function BookListItem({
           }}
           numberOfLines={1}
         >
-          {title}
+          {book.title}
         </Text>
 
         <Text
@@ -77,7 +80,7 @@ export function BookListItem({
           }}
           numberOfLines={1}
         >
-          {author}
+          {book.author}
         </Text>
 
         {subtitle && (
@@ -87,37 +90,17 @@ export function BookListItem({
               color: colors.gray,
               marginTop: 5,
             }}
-            numberOfLines={1}
           >
             {subtitle}
           </Text>
         )}
       </View>
 
-      {price && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '700',
-              color: colors.forest,
-            }}
-          >
-            {price}
-          </Text>
-
-          <Ionicons
-            name="chevron-forward"
-            size={20}
-            color={colors.gray}
-          />
-        </View>
-      )}
+      <Ionicons
+        name="chevron-forward"
+        size={20}
+        color={colors.gray}
+      />
     </Pressable>
   );
 }
