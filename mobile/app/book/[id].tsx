@@ -1,17 +1,23 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import {
+  Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
+import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/constants/Colors';
 import { sampleBooks } from '@/data/sampleBooks';
+import { getCoverColor } from '@/utils/coverColor';
 
 export default function BookDetailsScreen() {
   const { id } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
 
   const book = sampleBooks.find(
     (item) => item.id === id
@@ -44,20 +50,35 @@ export default function BookDetailsScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
+      <Pressable
+        style={[styles.backButton, { marginTop: insets.top + 10 }]}
+        onPress={() => router.back()}
+      >
+        <Ionicons name="arrow-back" size={24} color={colors.forest} />
+        <Text style={styles.backText}>Back</Text>
+      </Pressable>
+
         <View
           style={[
             styles.cover,
             {
-              backgroundColor:
-                book.coverColor ?? colors.forest,
+              backgroundColor: getCoverColor(book.id),
             },
           ]}
         >
-          <Ionicons
-            name="book-outline"
-            size={72}
-            color={colors.cream}
-          />
+          {book.coverUrl ? (
+            <Image
+              source={{ uri: book.coverUrl }}
+              style={styles.coverImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <Ionicons
+              name="book-outline"
+              size={72}
+              color={colors.cream}
+            />
+          )}
         </View>
 
         <Text style={styles.title}>
@@ -65,26 +86,18 @@ export default function BookDetailsScreen() {
         </Text>
 
         <Text style={styles.author}>
-          {book.author}
+          {book.authors.join(', ')}
         </Text>
 
-        <View style={styles.infoRow}>
-          {book.genre && (
+        {book.firstPublishYear && (
+          <View style={styles.infoRow}>
             <View style={styles.tag}>
               <Text style={styles.tagText}>
-                {book.genre}
+                {book.firstPublishYear}
               </Text>
             </View>
-          )}
-
-          {book.publishedYear && (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>
-                {book.publishedYear}
-              </Text>
-            </View>
-          )}
-        </View>
+          </View>
+        )}
 
         {book.progress !== undefined && (
           <View style={styles.progressCard}>
@@ -110,42 +123,6 @@ export default function BookDetailsScreen() {
             </View>
           </View>
         )}
-
-        <Text style={styles.sectionTitle}>
-          About This Book
-        </Text>
-
-        <Text style={styles.description}>
-          {book.description ??
-            'No description available.'}
-        </Text>
-
-        <Text style={styles.sectionTitle}>
-          Book Information
-        </Text>
-
-        <InfoRow
-          label="Pages"
-          value={
-            book.pages
-              ? book.pages.toString()
-              : 'Unknown'
-          }
-        />
-
-        <InfoRow
-          label="Published"
-          value={
-            book.publishedYear
-              ? book.publishedYear.toString()
-              : 'Unknown'
-          }
-        />
-
-        <InfoRow
-          label="ISBN"
-          value={book.isbn ?? 'Unknown'}
-        />
 
         {book.rating && (
           <>
@@ -174,26 +151,6 @@ export default function BookDetailsScreen() {
   );
 }
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <View style={styles.infoItem}>
-      <Text style={styles.infoLabel}>
-        {label}
-      </Text>
-
-      <Text style={styles.infoValue}>
-        {value}
-      </Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -213,6 +170,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
+    overflow: 'hidden',
+  },
+
+  coverImage: {
+    width: '100%',
+    height: '100%',
   },
 
   title: {
@@ -297,31 +260,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  description: {
-    fontSize: 15,
-    color: colors.dark,
-    lineHeight: 23,
-  },
-
-  infoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.lightGray,
-  },
-
-  infoLabel: {
-    color: colors.gray,
-    fontSize: 14,
-  },
-
-  infoValue: {
-    color: colors.dark,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-
   rating: {
     flexDirection: 'row',
     gap: 6,
@@ -332,5 +270,18 @@ const styles = StyleSheet.create({
     marginTop: 100,
     fontSize: 18,
     color: colors.forest,
+  },
+
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  backText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.forest,
+    marginLeft: 8,
   },
 });

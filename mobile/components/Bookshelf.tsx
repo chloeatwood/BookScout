@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
 
-// import type { Book } from '@/services/openLibrary';
 import type { Book } from '@/types/book';
 import { colors } from '@/constants/Colors';
+import { getCoverColor } from '@/utils/coverColor';
 
 type BookshelfProps = {
   title: string;
@@ -11,6 +12,32 @@ type BookshelfProps = {
   icon: keyof typeof Ionicons.glyphMap;
   onPress?: () => void;
 };
+
+function BookCoverThumb({ book }: { book: Book }) {
+  const [failed, setFailed] = useState(false);
+
+  if (book.coverUrl && !failed) {
+    return (
+      <Image
+        source={{ uri: book.coverUrl }}
+        style={styles.cover}
+        resizeMode="cover"
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+
+  return (
+    <View
+      style={[
+        styles.coverPlaceholder,
+        { backgroundColor: getCoverColor(book.id) },
+      ]}
+    >
+      <Ionicons name="book-outline" size={18} color={colors.cream} />
+    </View>
+  );
+}
 
 export function Bookshelf({
   title,
@@ -66,21 +93,7 @@ export function Bookshelf({
                   },
                 ]}
               >
-                {book.coverUrl ? (
-                  <Image
-                    source={{ uri: book.coverUrl }}
-                    style={styles.cover}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <View style={styles.coverPlaceholder}>
-                    <Ionicons
-                      name="book-outline"
-                      size={18}
-                      color={colors.gray}
-                    />
-                  </View>
-                )}
+                <BookCoverThumb book={book} />
               </View>
             ))}
           </View>
@@ -158,9 +171,10 @@ const styles = StyleSheet.create({
 
   coverPlaceholder: {
     flex: 1,
+    width: '100%',
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.lightGray,
   },
 
   shelfBoard: {

@@ -8,15 +8,10 @@ export type BookList =
 export type Book = {
   id: string;
   title: string;
-  author: string;
-  description?: string;
-  genre?: string;
-  pages?: number;
-  publishedYear?: number;
-  isbn?: string;
-  coverColor?: string;
+  authors: string[];
+  coverUrl?: string;
+  firstPublishYear?: number;
   rating?: number;
   progress?: number;
   list: BookList;
-  coverUrl?: string;
 };

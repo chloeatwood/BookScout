@@ -191,15 +191,16 @@ These features will be added after the core application and data infrastructure 
 * [x] Search screen
 * [X] Connect search to Open Library
 * [X] Display search results
-* [ ] Book details
-* [ ] ISBN/barcode scanning
+* [X] Book details
+* [X] ISBN/barcode scanning
 
 ### Phase 2 — User Features
 
-* [ ] Personal bookshelf
+* [X] Personal bookshelf
 * [ ] Add/remove books
 * [ ] Track reading status
 * [ ] User accounts
+  * [ ] Login Page
 
 ### Phase 3 — Backend
 
@@ -278,3 +279,12 @@ Cloud Deployment
 ```
 
 The goal is to eventually turn BookScout into a complete, production-style application while using the project to develop practical software engineering skills.
+
+
+## Copyright
+
+© 2026 Chloe Atwood. All rights reserved.
+
+This project and its source code are the original work of Chloe Atwood.
+Viewing this repository does not grant permission to copy, modify,
+distribute, or use the source code or original content without permission.

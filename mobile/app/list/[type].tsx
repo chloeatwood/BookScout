@@ -1,15 +1,19 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import {
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
 } from 'react-native';
 
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { BookListItem } from '@/components/BookListItem';
 import { colors } from '@/constants/Colors';
 import { useBooks } from '@/context/BookContext';
 import { BookList } from '@/types/book';
 import { BottomTabBar } from '@/components/BottomTabBar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const listTitles: Record<BookList, string> = {
   currentlyReading: 'Currently Reading',
@@ -20,6 +24,7 @@ const listTitles: Record<BookList, string> = {
 };
 
 export default function BookListScreen() {
+  const insets = useSafeAreaInsets();
   const { type } =
     useLocalSearchParams<{ type: BookList }>();
 
@@ -50,11 +55,21 @@ export default function BookListScreen() {
         renderItem={({ item }) => (
           <BookListItem
             book={item}
-            subtitle={item.author}
+            subtitle={item.authors.join(', ')}
           />
         )}
         ListHeaderComponent={
-          <Text style={styles.title}>{title}</Text>
+          <>
+          <Pressable
+            style={[styles.backButton, { marginTop: insets.top + 10 }]}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color={colors.forest} />
+            <Text style={styles.backText}>Back</Text>
+          </Pressable>
+
+            <Text style={styles.title}>{title}</Text>
+          </>
         }
         contentContainerStyle={styles.content}
         style={styles.container}
@@ -94,4 +109,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 8,
+  },
+
+  backText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.forest,
+    marginLeft: 8,
+  },
 });

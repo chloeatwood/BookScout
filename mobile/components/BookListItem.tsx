@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 
 import { colors } from '@/constants/Colors';
 import { Book } from '@/types/book';
+import { getCoverColor } from '@/utils/coverColor';
 
 type BookListItemProps = {
   book: Book;
@@ -41,17 +42,25 @@ export function BookListItem({
           width: 58,
           height: 62,
           borderRadius: 9,
-          backgroundColor:
-            book.coverColor ?? colors.forest,
+          backgroundColor: getCoverColor(book.id),
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'hidden',
         }}
       >
-        <Ionicons
-          name="book-outline"
-          size={26}
-          color={colors.cream}
-        />
+        {book.coverUrl ? (
+          <Image
+            source={{ uri: book.coverUrl }}
+            style={{ width: '100%', height: '100%' }}
+            resizeMode="cover"
+          />
+        ) : (
+          <Ionicons
+            name="book-outline"
+            size={26}
+            color={colors.cream}
+          />
+        )}
       </View>
 
       <View
@@ -80,7 +89,7 @@ export function BookListItem({
           }}
           numberOfLines={1}
         >
-          {book.author}
+          {book.authors.join(', ')}
         </Text>
 
         {subtitle && (

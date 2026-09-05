@@ -9,9 +9,14 @@ import {
   View,
 } from 'react-native';
 import { colors } from '@/constants/Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getCoverColor } from '@/utils/coverColor';
 
 export default function BookDetailsScreen() {
+  const insets = useSafeAreaInsets();
+
   const {
+    id,
     title,
     authors,
     coverUrl,
@@ -31,7 +36,7 @@ export default function BookDetailsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Pressable
-          style={styles.backButton}
+          style={[styles.backButton, { marginTop: insets.top + 10 }]}
           onPress={() => router.back()}
         >
           <Ionicons
@@ -50,11 +55,16 @@ export default function BookDetailsScreen() {
               resizeMode="cover"
             />
           ) : (
-            <View style={styles.coverPlaceholder}>
+            <View
+              style={[
+                styles.coverPlaceholder,
+                { backgroundColor: getCoverColor(id) },
+              ]}
+            >
               <Ionicons
                 name="book-outline"
                 size={48}
-                color={colors.gray}
+                color={colors.cream}
               />
             </View>
           )}
@@ -120,18 +130,15 @@ const styles = StyleSheet.create({
     height: 270,
     borderRadius: 12,
     marginBottom: 24,
-    // marginTop: 40,
   },
 
   coverPlaceholder: {
     width: 180,
     height: 270,
     borderRadius: 12,
-    backgroundColor: colors.lightGray,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
-    // marginTop: 40,
   },
 
   title: {
