@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { colors } from '@/constants/Colors';
 import type { Book } from '@/services/openLibrary';
 import { searchBooks } from '@/services/openLibrary';
+import { router } from 'expo-router';
 
 export default function FinderScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -178,6 +179,18 @@ export default function FinderScreen() {
               <Pressable
                 key={book.id}
                 style={styles.bookCard}
+                onPress={() =>
+                  router.push({
+                    pathname: '/book-details',
+                    params: {
+                      id: book.id,
+                      title: book.title,
+                      authors: book.authors.join(', '),
+                      coverUrl: book.coverUrl ?? '',
+                      firstPublishYear: book.firstPublishYear?.toString() ?? '',
+                    }
+                  })
+                }
               >
                 {book.coverUrl ? (
                   <Image
