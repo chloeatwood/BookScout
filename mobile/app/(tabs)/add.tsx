@@ -21,7 +21,8 @@ export default function AddScreen() {
           reading list.
         </Text>
 
-        <Pressable style={styles.primaryButton}>
+        <Pressable style={styles.primaryButton}
+                    onPress={() => router.push('/scanner')}>
           <Ionicons
             name="barcode-outline"
             size={26}

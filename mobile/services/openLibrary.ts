@@ -99,3 +99,33 @@ export async function searchBooks(query: string): Promise<Book[]> {
     //If there where no books, search by author
     return await searchAuthors(query);
 }
+
+export async function searchBookByISBN(isbn: string): Promise<Book[]> {
+    const cleanedISBN = isbn.replace(/[-\s]/g, '');
+
+    if(!cleanedISBN){
+        return [];
+    }
+
+      const url = `https://openlibrary.org/search.json?isbn=${encodeURIComponent(
+        cleanedISBN
+        )}&limit=20`;
+
+    const response = await fetch(url);
+
+    if(!response.ok){
+        throw new Error("Failed to search for book by ISBN");
+    }
+
+    const data: OpenLibraryResponse = await response.json();
+
+    return data.docs.map((book) => ({
+        id: book.key,
+        title: book.title,
+        authors: book.author_name ?? ['Unknown Author'],
+        coverUrl: book.cover_i
+            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+            : undefined,
+        firstPublishYear: book.first_publish_year,
+    }));
+}

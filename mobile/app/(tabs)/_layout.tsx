@@ -85,6 +85,9 @@ export default function RootLayout() {
           }}
         />
 
+        {/* To keep pages from being added to bottom nav bar
+            add them below */}
+
         <Tabs.Screen
           name="manual-entry"
           options={{
@@ -101,6 +104,20 @@ export default function RootLayout() {
 
         <Tabs.Screen
           name="list/[type]"
+          options={{
+            href: null,
+          }}
+        />
+
+        <Tabs.Screen
+          name="book-details"
+          options={{
+            href: null,
+          }}
+        />
+
+        <Tabs.Screen
+          name="scanner"
           options={{
             href: null,
           }}

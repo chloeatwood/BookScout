@@ -97,7 +97,7 @@ export default function FinderScreen() {
             returnKeyType="search"
           />
 
-          <Pressable>
+          <Pressable onPress={() => router.push('/scanner')}>
             <Ionicons
               name="barcode-outline"
               size={24}
