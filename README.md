@@ -194,23 +194,22 @@ These features will be added after the core application and data infrastructure 
 * [X] Book details
 * [X] ISBN/barcode scanning
 
-### Phase 2 — User Features
+### Phase 2 — User Features / Backend
 
 * [X] Personal bookshelf
+* [ ] Design Database Schema
+* [ ] Setup backend and connect to frontend
+  * [ ] FastAPI
+  * [ ] REST API
+  * [ ] Database
+* [ ] Add login/out pages
 * [ ] Add/remove books
 * [ ] Track reading status
 * [ ] User accounts
-  * [ ] Login Page
-
-### Phase 3 — Backend
-
-* [ ] FastAPI backend
-* [ ] REST API
-* [ ] Database
 * [ ] User authentication
 * [ ] Persist book and user data
 
-### Phase 4 — Price Tracking
+### Phase 3 — Price Tracking
 
 * [ ] Collect price data
 * [ ] Normalize book editions
@@ -218,7 +217,7 @@ These features will be added after the core application and data infrastructure 
 * [ ] Compare prices
 * [ ] Display cheapest options
 
-### Phase 5 — Data & Machine Learning
+### Phase 4 — Data & Machine Learning
 
 * [ ] Build data pipeline
 * [ ] Book similarity
@@ -227,7 +226,7 @@ These features will be added after the core application and data infrastructure 
 * [ ] Price analysis
 * [ ] Price prediction
 
-### Phase 6 — Deployment
+### Phase 5 — Deployment
 
 * [ ] Dockerize application
 * [ ] Set up CI/CD
