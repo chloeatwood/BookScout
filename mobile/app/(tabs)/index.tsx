@@ -1,4 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+
 import {
   ScrollView,
   StyleSheet,
@@ -7,28 +9,18 @@ import {
   View,
 } from 'react-native';
 
-import { BookCard } from '@/components/BookCard';
-import { SectionHeader } from '@/components/SectionHeader';
+import { Bookshelf } from '@/components/Bookshelf';
 import { colors } from '@/constants/Colors';
 import { useBooks } from '@/context/BookContext';
 
 export default function HomeScreen() {
   const { getBooksByList } = useBooks();
 
-  const currentlyReading =
-    getBooksByList('currentlyReading');
-
-  const wishlist =
-    getBooksByList('wishlist');
-
-  const finished =
-    getBooksByList('finished');
-
-  const bookshelf =
-    getBooksByList('bookshelf');
-
-  const recommendations =
-    getBooksByList('recommendations');
+  const currentlyReading = getBooksByList('currentlyReading');
+  const wishlist = getBooksByList('wishlist');
+  const finished = getBooksByList('finished');
+  const bookshelf = getBooksByList('bookshelf');
+  const recommendations = getBooksByList('recommendations');
 
   return (
     <View style={styles.container}>
@@ -39,8 +31,8 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>
-              Welcome back!
+            <Text style={styles.greetings}>
+              Welcome Back!
             </Text>
 
             <Text style={styles.title}>
@@ -71,99 +63,54 @@ export default function HomeScreen() {
         </View>
 
         {/* Currently Reading */}
-        <SectionHeader
+        <Bookshelf
           title="Currently Reading"
-          list="currentlyReading"
+          icon="book-outline"
+          books={currentlyReading}
+          onPress={() =>
+            router.push('/list/currentlyReading')
+          }
         />
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        >
-          {currentlyReading.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-            />
-          ))}
-        </ScrollView>
 
         {/* Wishlist */}
-        <SectionHeader
+        <Bookshelf
           title="Wishlist"
-          list="wishlist"
+          icon="heart-outline"
+          books={wishlist}
+          onPress={() =>
+            router.push('/list/wishlist')
+          }
         />
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        >
-          {wishlist.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-            />
-          ))}
-        </ScrollView>
 
         {/* Finished */}
-        <SectionHeader
+        <Bookshelf
           title="Finished"
-          list="finished"
+          icon="checkmark-circle-outline"
+          books={finished}
+          onPress={() =>
+            router.push('/list/finished')
+          }
         />
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        >
-          {finished.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-            />
-          ))}
-        </ScrollView>
 
         {/* Bookshelf */}
-        <SectionHeader
+        <Bookshelf
           title="Bookshelf"
-          list="bookshelf"
+          icon="library-outline"
+          books={bookshelf}
+          onPress={() =>
+            router.push('/list/bookshelf')
+          }
         />
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        >
-          {bookshelf.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-            />
-          ))}
-        </ScrollView>
 
         {/* Recommendations */}
-        <SectionHeader
+        <Bookshelf
           title="Recommendations"
-          list="recommendations"
+          icon="sparkles-outline"
+          books={recommendations}
+          onPress={() =>
+            router.push('/list/recommendations')
+          }
         />
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        >
-          {recommendations.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-            />
-          ))}
-        </ScrollView>
       </ScrollView>
     </View>
   );
@@ -187,7 +134,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  greeting: {
+  greetings: {
     fontSize: 14,
     color: colors.gray,
   },
@@ -216,9 +163,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 14,
     color: colors.dark,
-  },
-
-  horizontalList: {
-    paddingBottom: 4,
   },
 });

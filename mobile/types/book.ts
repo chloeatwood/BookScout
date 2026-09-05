@@ -18,4 +18,5 @@ export type Book = {
   rating?: number;
   progress?: number;
   list: BookList;
+  coverUrl?: string;
 };
