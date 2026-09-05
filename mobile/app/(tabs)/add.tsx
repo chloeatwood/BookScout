@@ -39,7 +39,8 @@ export default function AddScreen() {
           </View>
         </Pressable>
 
-        <Pressable style={styles.secondaryButton}>
+        <Pressable style={styles.secondaryButton}
+                    onPress={() => router.push('/finder')}>
           <Ionicons
             name="search-outline"
             size={26}
