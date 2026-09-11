@@ -42,21 +42,21 @@ export default function FinderScreen() {
     }
   }
 
-  function handlePopularSearch(genre: string) {
-    setSearchQuery(genre);
+  // function handlePopularSearch(genre: string) {
+  //   setSearchQuery(genre);
 
-    // Search immediately when a popular search is selected.
-    searchBooks(genre)
-      .then((results) => {
-        setBooks(results);
-        setError('');
-      })
-      .catch((error) => {
-        console.error(error);
-        setError('Something went wrong while searching. Please try again.');
-        setBooks([]);
-      });
-  }
+  //   // Search immediately when a popular search is selected.
+  //   searchBooks(genre)
+  //     .then((results) => {
+  //       setBooks(results);
+  //       setError('');
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       setError('Something went wrong while searching. Please try again.');
+  //       setBooks([]);
+  //     });
+  // }
 
   return (
     <View style={styles.container}>
@@ -107,7 +107,7 @@ export default function FinderScreen() {
         </View>
 
         {/* Popular Searches */}
-        {books.length === 0 && !loading && (
+        {/* {books.length === 0 && !loading && (
           <>
             <Text style={styles.sectionTitle}>
               Popular Searches
@@ -133,7 +133,7 @@ export default function FinderScreen() {
               ))}
             </View>
           </>
-        )}
+        )} */}
 
         {/* Loading */}
         {loading && (
@@ -188,6 +188,7 @@ export default function FinderScreen() {
                       authors: book.authors.join(', '),
                       coverUrl: book.coverUrl ?? '',
                       firstPublishYear: book.firstPublishYear?.toString() ?? '',
+                      isbn: book.isbn ?? '',
                     }
                   })
                 }

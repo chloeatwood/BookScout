@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback } from 'react';
 import {
   FlatList,
   Pressable,
@@ -6,7 +7,6 @@ import {
   Text,
 } from 'react-native';
 
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { BookListItem } from '@/components/BookListItem';
 import { colors } from '@/constants/Colors';
@@ -16,25 +16,26 @@ import { BottomTabBar } from '@/components/BottomTabBar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const listTitles: Record<BookList, string> = {
-  currentlyReading: 'Currently Reading',
+  currently_reading: 'Currently Reading',
   wishlist: 'Wishlist',
   finished: 'Finished',
   bookshelf: 'Bookshelf',
-  recommendations: 'Recommendations',
 };
 
 export default function BookListScreen() {
   const insets = useSafeAreaInsets();
-  const { type } =
-    useLocalSearchParams<{ type: BookList }>();
+  const { type } = useLocalSearchParams<{ type: BookList }>();
+  const { getBooksByList, refreshBooks } = useBooks();
 
-  const { getBooksByList } = useBooks();
+  useFocusEffect(
+    useCallback(() => {
+      void refreshBooks();
+    }, [refreshBooks])
+  );
 
   const listType = type as BookList;
   const books = getBooksByList(listType);
-
-  const title =
-    listTitles[listType] ?? 'Books';
+  const title = listTitles[listType] ?? 'Books';
 
   return (
     <>
@@ -55,18 +56,19 @@ export default function BookListScreen() {
         renderItem={({ item }) => (
           <BookListItem
             book={item}
-            subtitle={item.authors.join(', ')}
+            subtitle={item.author}
+            list={listType}
           />
         )}
         ListHeaderComponent={
           <>
-          <Pressable
-            style={[styles.backButton, { marginTop: insets.top + 10 }]}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="arrow-back" size={24} color={colors.forest} />
-            <Text style={styles.backText}>Back</Text>
-          </Pressable>
+            <Pressable
+              style={[styles.backButton, { marginTop: insets.top + 10 }]}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={24} color={colors.forest} />
+              <Text style={styles.backText}>Back</Text>
+            </Pressable>
 
             <Text style={styles.title}>{title}</Text>
           </>

@@ -21,13 +21,28 @@ export default function BookDetailsScreen() {
     authors,
     coverUrl,
     firstPublishYear,
+    isbn,
   } = useLocalSearchParams<{
     id: string;
     title: string;
     authors: string;
     coverUrl: string;
     firstPublishYear: string;
+    isbn: string;
   }>();
+
+  const handleAddToList = () => {
+    router.push({
+      pathname: '/manual-entry',
+      params: {
+        title,
+        authors,
+        coverUrl,
+        firstPublishYear,
+        isbn
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -82,7 +97,7 @@ export default function BookDetailsScreen() {
           ) : null}
         </View>
 
-        <Pressable style={styles.addButton}>
+        <Pressable style={styles.addButton} onPress={handleAddToList}>
           <Ionicons
             name="add"
             size={24}

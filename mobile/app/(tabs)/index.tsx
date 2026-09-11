@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 import {
   ScrollView,
@@ -14,13 +15,18 @@ import { colors } from '@/constants/Colors';
 import { useBooks } from '@/context/BookContext';
 
 export default function HomeScreen() {
-  const { getBooksByList } = useBooks();
+  const { getBooksByList, refreshBooks } = useBooks();
 
-  const currentlyReading = getBooksByList('currentlyReading');
+  useFocusEffect(
+    useCallback(() => {
+      refreshBooks();
+    }, [refreshBooks])
+  );
+
+  const currentlyReading = getBooksByList('currently_reading');
   const wishlist = getBooksByList('wishlist');
   const finished = getBooksByList('finished');
   const bookshelf = getBooksByList('bookshelf');
-  const recommendations = getBooksByList('recommendations');
 
   return (
     <View style={styles.container}>
@@ -62,55 +68,37 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Currently Reading */}
         <Bookshelf
           title="Currently Reading"
           icon="book-outline"
           books={currentlyReading}
-          onPress={() =>
-            router.push('/list/currentlyReading')
-          }
+          onPress={() => router.push('/list/currently_reading')}
         />
 
-        {/* Wishlist */}
         <Bookshelf
           title="Wishlist"
           icon="heart-outline"
           books={wishlist}
-          onPress={() =>
-            router.push('/list/wishlist')
-          }
+          onPress={() => router.push('/list/wishlist')}
         />
 
-        {/* Finished */}
         <Bookshelf
           title="Finished"
           icon="checkmark-circle-outline"
           books={finished}
-          onPress={() =>
-            router.push('/list/finished')
-          }
+          onPress={() => router.push('/list/finished')}
         />
 
-        {/* Bookshelf */}
         <Bookshelf
           title="Bookshelf"
           icon="library-outline"
           books={bookshelf}
-          onPress={() =>
-            router.push('/list/bookshelf')
-          }
+          onPress={() => router.push('/list/bookshelf')}
         />
 
-        {/* Recommendations */}
-        <Bookshelf
-          title="Recommendations"
-          icon="sparkles-outline"
-          books={recommendations}
-          onPress={() =>
-            router.push('/list/recommendations')
-          }
-        />
+        {/* Recommendations shelf removed — no matching list in
+            manual-entry.tsx's LIST_OPTIONS yet. Uncomment there
+            first if you want this back. */}
       </ScrollView>
     </View>
   );

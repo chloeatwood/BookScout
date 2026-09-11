@@ -41,7 +41,7 @@ export default function ScannerScreen() {
       const results = await searchBookByISBN(data);
 
       if (results.length === 0) {
-        setError('We could not find a book with that ISBN.');
+        setError('We could not find that book in the Open Library database. Try searching for it or adding it manually');
         setScanned(false);
         return;
       }
@@ -56,6 +56,7 @@ export default function ScannerScreen() {
           authors: book.authors.join(', '),
           coverUrl: book.coverUrl ?? '',
           firstPublishYear: book.firstPublishYear?.toString() ?? '',
+          isbn: book.isbn ?? '',
         },
       });
     } catch (error) {
@@ -114,7 +115,7 @@ export default function ScannerScreen() {
   return (
     <View style={styles.container}>
       <CameraView
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         facing="back"
         barcodeScannerSettings={{
           barcodeTypes: ['ean13', 'ean8'],

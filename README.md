@@ -245,16 +245,16 @@ infrastructure are established.
 ### Phase 2 --- User Features / Backend
 
 -   [x] Personal bookshelf UI
--   [ ] Design database schema
--   [ ] Set up backend and connect to frontend
-    -   [ ] Supabase
-    -   [ ] Database
--   [ ] Add login / logout pages
--   [ ] Add / remove books
--   [ ] Track reading status
--   [ ] User accounts
--   [ ] User authentication
--   [ ] Persist book and user data
+-   [X] Design database schema
+-   [X] Set up backend and connect to frontend
+    -   [X] Supabase
+    -   [X] Database
+-   [X] Add login / logout pages
+-   [X] Add / remove books
+-   [X] Track reading status
+-   [X] User accounts
+-   [X] User authentication
+-   [X] Persist book and user data
 
 ### Phase 3 --- Price Tracking
 

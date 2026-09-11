@@ -3,17 +3,19 @@ import { router } from 'expo-router';
 import { Image, Pressable, Text, View } from 'react-native';
 
 import { colors } from '@/constants/Colors';
-import { Book } from '@/types/book';
+import { Book, BookList } from '@/types/book';
 import { getCoverColor } from '@/utils/coverColor';
 
 type BookListItemProps = {
   book: Book;
   subtitle?: string;
+  list?: BookList;
 };
 
 export function BookListItem({
   book,
   subtitle,
+  list,
 }: BookListItemProps) {
   return (
     <Pressable
@@ -22,6 +24,7 @@ export function BookListItem({
           pathname: '/book/[id]',
           params: {
             id: book.id,
+            ...(list ? { fromList: list } : {}),
           },
         })
       }
@@ -89,7 +92,7 @@ export function BookListItem({
           }}
           numberOfLines={1}
         >
-          {book.authors.join(', ')}
+          {book.author}
         </Text>
 
         {subtitle && (

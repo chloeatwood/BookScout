@@ -4,6 +4,7 @@ export type Book = {
     authors: string[];
     coverUrl?: string;
     firstPublishYear?: number;
+    isbn?: string;
 };
 
 type OpenLibraryBook = {
@@ -12,6 +13,7 @@ type OpenLibraryBook = {
     author_name?: string[];
     cover_i?: number;
     first_publish_year?: number;
+    isbn?: string[];
 };
 
 type OpenLibraryResponse = {
@@ -28,7 +30,7 @@ type OpenLibraryAuthorResponse = {
 };
 
 async function searchBookTitles(query: string): Promise<Book[]> {
-    const url = `https://openlibrary.org/search.json?q=${encodeURIComponent( query.trim() )}&limit=20`;
+    const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query.trim())}&fields=key,title,author_name,cover_i,first_publish_year,isbn&limit=20`;
 
     const response = await fetch(url);
 
@@ -44,6 +46,7 @@ async function searchBookTitles(query: string): Promise<Book[]> {
         authors: book.author_name ?? ["Unkown Author"],
         coverUrl: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : undefined,
         firstPublishYear: book.first_publish_year,
+        isbn: book.isbn?.[0],
     }));
 }
 
@@ -80,6 +83,7 @@ async function searchAuthors(query: string): Promise<Book[]> {
         authors: [author.name],
         coverUrl: book.covers?.[0] ? `https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg` : undefined,
         firstPublishYear: book.first_publish_year,
+        // isbn: book.isbn?.[0],
     }));
 
 }
@@ -103,29 +107,37 @@ export async function searchBooks(query: string): Promise<Book[]> {
 export async function searchBookByISBN(isbn: string): Promise<Book[]> {
     const cleanedISBN = isbn.replace(/[-\s]/g, '');
 
-    if(!cleanedISBN){
+    if (!cleanedISBN) {
         return [];
     }
 
-      const url = `https://openlibrary.org/search.json?isbn=${encodeURIComponent(
+    const url = `https://openlibrary.org/search.json?isbn=${encodeURIComponent(
         cleanedISBN
-        )}&limit=20`;
+    )}&fields=key,title,author_name,cover_i,first_publish_year,isbn&limit=20`;
 
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-    if(!response.ok){
-        throw new Error("Failed to search for book by ISBN");
+    try {
+        const response = await fetch(url, { signal: controller.signal });
+
+        if (!response.ok) {
+            throw new Error('Failed to search for book by ISBN');
+        }
+
+        const data: OpenLibraryResponse = await response.json();
+
+        return data.docs.map((book) => ({
+            id: book.key,
+            title: book.title,
+            authors: book.author_name ?? ['Unknown Author'],
+            coverUrl: book.cover_i
+                ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+                : undefined,
+            firstPublishYear: book.first_publish_year,
+            isbn: book.isbn?.[0] ?? cleanedISBN,
+        }));
+    } finally {
+        clearTimeout(timeout);
     }
-
-    const data: OpenLibraryResponse = await response.json();
-
-    return data.docs.map((book) => ({
-        id: book.key,
-        title: book.title,
-        authors: book.author_name ?? ['Unknown Author'],
-        coverUrl: book.cover_i
-            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
-            : undefined,
-        firstPublishYear: book.first_publish_year,
-    }));
 }

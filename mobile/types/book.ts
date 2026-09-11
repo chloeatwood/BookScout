@@ -1,17 +1,19 @@
 export type BookList =
-  | 'currentlyReading'
+  | 'currently_reading'
   | 'wishlist'
   | 'finished'
-  | 'bookshelf'
-  | 'recommendations';
+  | 'bookshelf';
 
 export type Book = {
   id: string;
   title: string;
-  authors: string[];
+  author: string;
+  isbn?: string;
+  pubDate?: string;
   coverUrl?: string;
-  firstPublishYear?: number;
+  totalPages?: number;
+  pagesRead?: number;
   rating?: number;
-  progress?: number;
-  list: BookList;
+  notes?: string;
+  lists: BookList[];
 };
