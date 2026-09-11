@@ -4,22 +4,23 @@ A user should be able to log in and out of the application. A user will be able 
 ## User
 A user should be able to store as many books as they want in several different lists.
 * [ ] userID - unique
-* [ ] Name
-* [ ] Email
-* [ ] Phone
-* [ ] Password
-* [ ] 
+* [ ] name
+* [ ] email
+* [ ] phone
+* [ ] createdAT
 
-## Book 
-* [ ] bookID? - unique
-  * [ ] Could I just use userID so that it is connected?
+## Users_Book 
+* [ ] bookID - unique
+* [ ] userID - foreign key - connects to user
 * [ ] title
 * [ ] author
 * [ ] pubDate
 * [ ] ISBN
 * [ ] rating - stars to fill in
-* [ ] %read
+* [ ] percentRead
 * [ ] personalNotes
 * [ ] coverUrl
-* [ ] lists 
+* [ ] createdAt
+* [ ] updatedAt
+* [ ] lists - An array of lists the book belongs too
   * [ ] Maybe to fill in icons - user can select the icon of the list they want

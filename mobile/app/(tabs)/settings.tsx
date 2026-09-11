@@ -8,8 +8,13 @@ import {
 } from 'react-native';
 
 import { colors } from '@/constants/Colors';
+import { supabase } from '@/utils/supabase';
 
 export default function SettingsScreen() {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -66,6 +71,17 @@ export default function SettingsScreen() {
           subtitle="Get help or send feedback"
         />
 
+        <Text style={styles.sectionTitle}>
+          Account
+        </Text>
+
+        <SettingItem
+          icon="log-out-outline"
+          title="Log Out"
+          subtitle="Sign out of your account"
+          onPress={handleLogout}
+        />
+
         <Text style={styles.version}>
           BookScout v0.1.0
         </Text>
@@ -78,13 +94,15 @@ function SettingItem({
   icon,
   title,
   subtitle,
+  onPress,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle: string;
+  onPress?: () => void;
 }) {
   return (
-    <Pressable style={styles.settingItem}>
+    <Pressable style={styles.settingItem} onPress={onPress}>
       <View style={styles.iconContainer}>
         <Ionicons
           name={icon}

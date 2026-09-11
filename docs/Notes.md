@@ -10,6 +10,7 @@ A list of bugs and/or things that I need to go back to later.
   * [ ] Appearance - Light/Dark
   * [ ] About BookScout
   * [ ] Help & Feedback
+  * [X] Logout
 * [ ] When you search for and select a book, the back button returns you to the home page. It should return you to the list of books you just searched
 * [ ] When selecting a book from a list the bottom nav bar disappears on the book page
 * [ ] Incorporate more nature elements into UI. Its called BookScout
