@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import {
   ScrollView,
@@ -11,15 +11,17 @@ import {
 } from 'react-native';
 
 import { Bookshelf } from '@/components/Bookshelf';
+import { BookListItem } from '@/components/BookListItem';
 import { colors } from '@/constants/Colors';
 import { useBooks } from '@/context/BookContext';
 
 export default function HomeScreen() {
-  const { getBooksByList, refreshBooks } = useBooks();
+  const { books, getBooksByList, refreshBooks } = useBooks();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useFocusEffect(
     useCallback(() => {
-      refreshBooks();
+      void refreshBooks();
     }, [refreshBooks])
   );
 
@@ -27,6 +29,20 @@ export default function HomeScreen() {
   const wishlist = getBooksByList('wishlist');
   const finished = getBooksByList('finished');
   const bookshelf = getBooksByList('bookshelf');
+
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+
+  const searchResults = useMemo(() => {
+    if (!trimmedQuery) return [];
+
+    return books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(trimmedQuery) ||
+        book.author.toLowerCase().includes(trimmedQuery)
+    );
+  }, [books, trimmedQuery]);
+
+  const isSearching = trimmedQuery.length > 0;
 
   return (
     <View style={styles.container}>
@@ -65,40 +81,63 @@ export default function HomeScreen() {
             placeholder="Search your books..."
             placeholderTextColor={colors.gray}
             style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
         </View>
 
-        <Bookshelf
-          title="Currently Reading"
-          icon="book-outline"
-          books={currentlyReading}
-          onPress={() => router.push('/list/currently_reading')}
-        />
+        {isSearching ? (
+          <View style={styles.searchResults}>
+            {searchResults.length > 0 ? (
+              searchResults.map((book) => (
+                <BookListItem
+                  key={book.id}
+                  book={book}
+                  subtitle={book.author}
+                  list={book.lists[0]}
+                />
+              ))
+            ) : (
+              <Text style={styles.noResultsText}>
+                No books in your collection match &quot;{searchQuery}&quot;.
+              </Text>
+            )}
+          </View>
+        ) : (
+          <>
+            <Bookshelf
+              title="Currently Reading"
+              icon="book-outline"
+              books={currentlyReading}
+              onPress={() => router.push('/list/currently_reading')}
+            />
 
-        <Bookshelf
-          title="Wishlist"
-          icon="heart-outline"
-          books={wishlist}
-          onPress={() => router.push('/list/wishlist')}
-        />
+            <Bookshelf
+              title="Wishlist"
+              icon="heart-outline"
+              books={wishlist}
+              onPress={() => router.push('/list/wishlist')}
+            />
 
-        <Bookshelf
-          title="Finished"
-          icon="checkmark-circle-outline"
-          books={finished}
-          onPress={() => router.push('/list/finished')}
-        />
+            <Bookshelf
+              title="Finished"
+              icon="checkmark-circle-outline"
+              books={finished}
+              onPress={() => router.push('/list/finished')}
+            />
 
-        <Bookshelf
-          title="Bookshelf"
-          icon="library-outline"
-          books={bookshelf}
-          onPress={() => router.push('/list/bookshelf')}
-        />
+            <Bookshelf
+              title="Bookshelf"
+              icon="library-outline"
+              books={bookshelf}
+              onPress={() => router.push('/list/bookshelf')}
+            />
 
-        {/* Recommendations shelf removed — no matching list in
-            manual-entry.tsx's LIST_OPTIONS yet. Uncomment there
-            first if you want this back. */}
+            {/* Recommendations shelf removed — no matching list in
+                manual-entry.tsx's LIST_OPTIONS yet. Uncomment there
+                first if you want this back. */}
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -151,5 +190,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 14,
     color: colors.dark,
+  },
+
+  searchResults: {
+    marginTop: 20,
+  },
+
+  noResultsText: {
+    textAlign: 'center',
+    marginTop: 40,
+    color: colors.gray,
+    fontSize: 14,
   },
 });
