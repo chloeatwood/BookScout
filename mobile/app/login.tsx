@@ -21,6 +21,8 @@ export default function LoginScreen() {
   const [mode, setMode] = useState<Mode>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<
     string | null
@@ -36,11 +38,18 @@ export default function LoginScreen() {
     setInfoMessage(null);
 
     const trimmedEmail = email.trim();
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
 
     if (!trimmedEmail || !password) {
       setErrorMessage(
         'Enter both an email and a password.'
       );
+      return;
+    }
+
+    if (isSignUp && !trimmedName) {
+      setErrorMessage('Enter your name.');
       return;
     }
 
@@ -50,6 +59,12 @@ export default function LoginScreen() {
       const { error } = await supabase.auth.signUp({
         email: trimmedEmail,
         password,
+        options: {
+          data: {
+            name: trimmedName,
+            phone: trimmedPhone,
+          },
+        },
       });
 
       setLoading(false);
@@ -85,6 +100,8 @@ export default function LoginScreen() {
   const toggleMode = () => {
     setErrorMessage(null);
     setInfoMessage(null);
+    setName('');
+    setPhone('');
     setMode(isSignUp ? 'signIn' : 'signUp');
   };
 
@@ -107,6 +124,40 @@ export default function LoginScreen() {
             ? 'Create an account to start tracking your books.'
             : 'Sign in to pick up where you left off.'}
         </Text>
+
+        {isSignUp && (
+          <>
+            <View style={styles.field}>
+              <Text style={styles.label}>Name</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Jane Doe"
+                placeholderTextColor={colors.gray}
+                autoCapitalize="words"
+                autoComplete="name"
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.label}>
+                Phone Number
+              </Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="(555) 123-4567"
+                placeholderTextColor={colors.gray}
+                keyboardType="phone-pad"
+                autoComplete="tel"
+                value={phone}
+                onChangeText={setPhone}
+              />
+            </View>
+          </>
+        )}
 
         <View style={styles.field}>
           <Text style={styles.label}>Email</Text>

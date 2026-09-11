@@ -122,6 +122,20 @@ export default function RootLayout() {
             href: null,
           }}
         />
+
+        <Tabs.Screen
+          name="profile"
+          options={{
+            href: null,
+          }}
+        />
+
+        <Tabs.Screen
+          name="help-feedback"
+          options={{
+            href: null,
+          }}
+        />
       </Tabs>
   );
 }
