@@ -1,6 +1,6 @@
 # Misc Notes 
 A list of bugs and/or things that I need to go back to later.
-* [ ] Search personal collection of books on homepage
+* [X] Search personal collection of books on homepage
 * [X] Remove filtering by genre
 * [X] Update Enter Manually option to reflect new decisions on what will be stored
 * [ ] Make Settings Page Functionl
