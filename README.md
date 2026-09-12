@@ -363,27 +363,54 @@ Challenges that will need to be addressed include identifying specific editions,
 * [X] About BookScout page
 * [X] Test for bugs and fix them
 
-### Phase 3 — Price Tracking
+### Phase 3 — Price / Book Info Tracking
 
+* [ ] Check for a free digital copy first
+  * [ ] Project Gutenberg API — public domain full text, no pricing needed if found
+  * [ ] Open Library — free lending/reading availability for many in-copyright books too
 * [ ] Identify supported pricing sources
-* [ ] Collect price data
-* [ ] Normalize book editions
-* [ ] Store historical prices
-* [ ] Compare prices
-* [ ] Display cheapest options
+  * [ ] eBay Browse API — free, real per-listing prices, primary source
+  * [ ] Google Books API — free, but only returns Google Play Books' own digital price, when that edition is sold there (not a general price-anywhere lookup)
+  * [ ] (Later, not now) Amazon Product Advertising API — technically free, but requires being an approved Associate with an ongoing minimum of qualifying sales through affiliate links; not usable unless the app has real traffic
+  * [ ] (Later possibility) ISBNdb — paid ($14.99+/mo), but the only realistic multi-retailer aggregator
+  * [ ] (Experimental, separate from the above) Nearby/named retailers with no API (Barnes & Noble, Books-A-Million) — via a search API (e.g. Tavily) + LLM extraction, shown to the user as unverified/approximate with a link to confirm, never mixed into the same sorted list as real listing prices
+* [ ] Collect price data — normalize each source's response into a common shape: {source, price, currency, url, condition, checked_at}
+* [ ] Normalize book editions — key by ISBN-13 when available (from Google Books/Open Library metadata); fall back to fuzzy title+author matching when a source doesn't return one
+* [ ] Store historical prices — one row per (book, source, checked_at) so price trends become possible later
+* [ ] Compare prices — merge normalized results per book across all sources, sort ascending
+* [ ] Display cheapest options — show top N results with source, price, freshness ("as of"), and outbound link; visually distinguish verified (API) prices from unverified (search-derived) ones
 
-### Phase 4 — Data Engineering & Machine Learning
+### Phase 4 —  Machine Learning
 
 * [ ] Build data pipeline
 * [ ] Clean and normalize book data
 * [ ] Book / edition entity matching
 * [ ] Book similarity
-* [ ] Recommendation system
+* [ ] Recommendation system - look into  API.market similar books (do something similar)
 * [ ] NLP / embeddings
 * [ ] Price analysis
 * [ ] Price prediction
 
-### Phase 5 — Finalize App frontend
+  ### Phase 4 — Machine Learning
+
+* [ ] Entity matching (classic string similarity, not ML — foundation for everything below)
+  * [ ] Fuzzy title/author matching via rapidfuzz for cross-source book/edition matching
+* [ ] Data pipeline
+  * [ ] Clean and normalize book data collected from Phase 3 sources
+  * [ ] Build the pipeline that keeps embeddings updated as new books are added
+* [ ] Recommendation system — content-based semantic similarity
+  * [ ] Generate book embeddings locally via sentence-transformers (free, open-source, no per-call cost) from title/genre/description
+  * [ ] Store embeddings in Postgres via pgvector (native to Supabase)
+  * [ ] Serve "similar books" via cosine-similarity queries against own data
+  * [ ] Note: this is content-based (what a book is about), not collaborative filtering (what similar users read) — the latter needs a real user base BookScout doesn't have
+* [ ] NLP / embeddings
+  * [ ] Covered by the recommendation work above — same embeddings power both similarity search and any future semantic search over the collection
+* [ ] Price analysis (once Phase 3 has real historical data)
+  * [ ] Descriptive stats over price_history (trend, spread, average) via pandas
+* [ ] Price prediction (defer until enough price history exists)
+  * [ ] Start with a simple baseline (moving average / linear trend) before considering anything more complex
+
+### Phase 5 — Finalize App Functionalities
 
 * [ ] Finish Settings Page
 * [ ] Do I want the nav bar to dissapear when viewing details about a book?
@@ -393,6 +420,8 @@ Challenges that will need to be addressed include identifying specific editions,
  * [ ] Read in the last week?
  * [ ] Reading goals?
  * [ ] etc. 
+ * [ ] New York Times Books API - Can get the current most popular books
+* [ ] Searching my genre - separate selection required or provide them with keywords (Search Books API)
 
 ### Phase 6 — Deployment
 

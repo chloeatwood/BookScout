@@ -1,0 +1,34 @@
+# BookScout Backend
+
+Python/FastAPI service for price search and nearby bookstore lookup.
+Kept separate from `mobile/` since it's a different runtime/language.
+
+## Setup
+
+    cd backend
+    python -m venv venv
+    source venv/bin/activate   # or venv\Scripts\activate on Windows
+    pip install -r requirements.txt
+    cp .env.example .env       # then fill in your real keys
+
+## Run locally
+
+    uvicorn app.main:app --reload
+
+Visit http://localhost:8000/docs for interactive API docs (FastAPI
+generates this automatically).
+
+## Endpoints
+
+- `GET /prices/search?q=<title or ISBN>` — online listing prices,
+  currently sourced from eBay's Browse API, sorted by price.
+- `GET /stores/nearby?lat=<>&lng=<>` — nearby bookstores via Google
+  Places. Locations only, no pricing (see main README for why).
+
+## Getting API keys
+
+- eBay Browse API: https://developer.ebay.com — create a free
+  developer account, create an application, use the production
+  App ID / Cert ID as `EBAY_CLIENT_ID` / `EBAY_CLIENT_SECRET`.
+- Google Places API: Google Cloud Console — enable "Places API
+  (New)", create an API key, restrict it to that API.
