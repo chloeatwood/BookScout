@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     paddingBottom: 40,
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
 
   backButton: {

@@ -1,19 +1,20 @@
-import { Stack, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
+// import { router } from 'expo-router';
 import { useCallback } from 'react';
 import {
   FlatList,
-  Pressable,
+  // Pressable,
   StyleSheet,
   Text,
 } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
+// import { Ionicons } from '@expo/vector-icons';
 import { BookListItem } from '@/components/BookListItem';
 import { colors } from '@/constants/Colors';
 import { useBooks } from '@/context/BookContext';
 import { BookList } from '@/types/book';
 import { BottomTabBar } from '@/components/BottomTabBar';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const listTitles: Record<BookList, string> = {
   currently_reading: 'Currently Reading',
@@ -23,7 +24,7 @@ const listTitles: Record<BookList, string> = {
 };
 
 export default function BookListScreen() {
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
   const { type } = useLocalSearchParams<{ type: BookList }>();
   const { getBooksByList, refreshBooks } = useBooks();
 
@@ -62,15 +63,15 @@ export default function BookListScreen() {
         )}
         ListHeaderComponent={
           <>
-            <Pressable
+            {/* <Pressable
               style={[styles.backButton, { marginTop: insets.top + 10 }]}
               onPress={() => router.back()}
             >
               <Ionicons name="arrow-back" size={24} color={colors.forest} />
               <Text style={styles.backText}>Back</Text>
-            </Pressable>
+            </Pressable> */}
 
-            <Text style={styles.title}>{title}</Text>
+            {/* <Text style={styles.title}>{title}</Text> */}
           </>
         }
         contentContainerStyle={styles.content}

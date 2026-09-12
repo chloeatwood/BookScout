@@ -48,17 +48,17 @@ export default function ScannerScreen() {
 
       const book = results[0];
 
-      router.replace({
-        pathname: '/book-details',
-        params: {
-          id: book.id,
-          title: book.title,
-          authors: book.authors.join(', '),
-          coverUrl: book.coverUrl ?? '',
-          firstPublishYear: book.firstPublishYear?.toString() ?? '',
-          isbn: book.isbn ?? '',
-        },
-      });
+    router.push({
+      pathname: '/book-details',
+      params: {
+        id: book.id,
+        title: book.title,
+        authors: book.authors.join(', '),
+        coverUrl: book.coverUrl ?? '',
+        firstPublishYear: book.firstPublishYear?.toString() ?? '',
+        isbn: book.isbn ?? '',
+      },
+    });
     } catch (error) {
       console.error(error);
       setError('Something went wrong while looking up that book.');

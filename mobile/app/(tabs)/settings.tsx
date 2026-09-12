@@ -36,7 +36,7 @@ export default function SettingsScreen() {
           icon="person-outline"
           title="Profile"
           subtitle="Manage your account"
-          onPress={() => router.push('/profile')}
+          onPress={() => router.push('../profile')}
         />
 
         <SettingItem
@@ -65,13 +65,14 @@ export default function SettingsScreen() {
           icon="information-circle-outline"
           title="About BookScout"
           subtitle="Learn more about the app"
+          onPress={() => router.push('../about-bookscout')}
         />
 
         <SettingItem
           icon="help-circle-outline"
           title="Help & Feedback"
           subtitle="Get help or send feedback"
-          onPress={() => router.push('/help-feedback')}
+          onPress={() => router.push('../help-feedback')}
         />
 
         <Text style={styles.sectionTitle}>

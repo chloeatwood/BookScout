@@ -22,7 +22,7 @@ export default function AddScreen() {
         </Text>
 
         <Pressable style={styles.primaryButton}
-                    onPress={() => router.push('/scanner')}>
+                    onPress={() => router.push('../scanner')}>
           <Ionicons
             name="barcode-outline"
             size={26}
@@ -61,7 +61,7 @@ export default function AddScreen() {
 
         <Pressable
           style={styles.secondaryButton}
-          onPress={() => router.push('/manual-entry')}
+          onPress={() => router.push('../manual-entry')}
         >
           <Ionicons
             name="create-outline"

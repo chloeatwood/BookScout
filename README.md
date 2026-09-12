@@ -359,9 +359,9 @@ Challenges that will need to be addressed include identifying specific editions,
 * [x] Help / feedback page
 
 ## Phase 2.5 - Some App Cleanup
-* [ ] Fix back button navigation
-* [ ] About BookScout page
-* [ ] Test for bugs and fix them
+* [X] Fix back button navigation
+* [X] About BookScout page
+* [X] Test for bugs and fix them
 
 ### Phase 3 — Price Tracking
 

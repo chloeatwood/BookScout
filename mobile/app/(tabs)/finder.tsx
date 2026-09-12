@@ -97,7 +97,7 @@ export default function FinderScreen() {
             returnKeyType="search"
           />
 
-          <Pressable onPress={() => router.push('/scanner')}>
+          <Pressable onPress={() => router.push('../scanner')}>
             <Ionicons
               name="barcode-outline"
               size={24}
@@ -181,7 +181,7 @@ export default function FinderScreen() {
                 style={styles.bookCard}
                 onPress={() =>
                   router.push({
-                    pathname: '/book-details',
+                    pathname: '../book-details',
                     params: {
                       id: book.id,
                       title: book.title,

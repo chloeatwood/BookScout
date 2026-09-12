@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { Slot, useRouter, useSegments } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { Session } from '@supabase/supabase-js';
 
 import { BookProvider } from '@/context/BookContext';
@@ -8,16 +8,12 @@ import { colors } from '@/constants/Colors';
 import { supabase } from '@/utils/supabase';
 
 export default function RootLayout() {
-  const [session, setSession] = useState<Session | null>(
-    null
-  );
+  const [session, setSession] = useState<Session | null>(null);
   const [initializing, setInitializing] = useState(true);
 
   const segments = useSegments();
   const router = useRouter();
 
-  // Load the current session once, then keep listening
-  // for sign-in / sign-out / token refresh events.
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
@@ -34,8 +30,6 @@ export default function RootLayout() {
     };
   }, []);
 
-  // Once we know the auth state, send the user to the
-  // right place based on where they currently are.
   useEffect(() => {
     if (initializing) return;
 
@@ -44,7 +38,7 @@ export default function RootLayout() {
     if (!session && !onLoginScreen) {
       router.replace('/login');
     } else if (session && onLoginScreen) {
-      router.replace('/');
+      router.replace('/(tabs)');
     }
   }, [session, initializing, segments]);
 
@@ -58,16 +52,29 @@ export default function RootLayout() {
 
   return (
     <BookProvider>
-      <Slot />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="(tabs)" />
+
+        <Stack.Screen name="scanner" />
+        <Stack.Screen name="finder" />
+        <Stack.Screen name="manual-entry" />
+        <Stack.Screen name="book-details" />
+        <Stack.Screen name="profile" />
+        <Stack.Screen name="help-feedback" />
+        <Stack.Screen name="list/[type]" />
+        <Stack.Screen name="book/[id]" />
+      </Stack>
     </BookProvider>
   );
 }
 
-const styles = {
+
+  const styles = {
   loadingContainer: {
     flex: 1,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     backgroundColor: colors.cream,
   },
-};
+}
